@@ -1,13 +1,13 @@
-import { highlightCurrentPlaying } from './helper';
-
+import { highlightCurrentPlaying } from './helpers/helperFunctions';
+import { ORIGINAL, SHUFFLE, PAUSE, PLAY } from './helpers/constants';
 export default class Controllers {
   play_pause(isPlaying, video) {
     if (isPlaying) {
       video.pause();
-      document.getElementById('play_pause').innerText = 'Play';
+      document.getElementById('play_pause').innerText = PLAY;
     } else {
       video.play();
-      document.getElementById('play_pause').innerText = 'Pause';
+      document.getElementById('play_pause').innerText = PAUSE;
     }
   }
   nextVideo(current, allVideos, video) {
@@ -30,11 +30,12 @@ export default class Controllers {
     let newList = [...originalList];
 
     if (!isShuffle) {
-      newList = newList.sort(function () {
-        document.getElementById('shuffle').innerText = 'Original';
-        highlightCurrentPlaying(0);
+      newList = newList.sort(() => {
+        document.getElementById('shuffle').innerText = ORIGINAL;
         return 0.5 - Math.random();
       });
+    } else {
+      document.getElementById('shuffle').innerText = SHUFFLE;
     }
 
     video.setAttribute('src', newList[0].file);
