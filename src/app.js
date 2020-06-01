@@ -2,15 +2,20 @@ import { getData } from './getData';
 import Controllers from './Controllers';
 import './main.css';
 // App State
-const state = { current: 0, isPlaying: true, isShuffle: false };
+const state = {
+  current: 0,
+  isPlaying: true,
+  isShuffle: false,
+  crazyMode: false,
+};
 //Video
 const video1 = document.getElementById('main_video');
+//SetIntervalId
+let setIntervalId;
 
-// play_pause nextVideo prevVideo shuffle will be avaible inside Controllers
+// play_pause, nextVideo, prevVideo, shuffle, will be avaible inside Controllers
 const controllers = new Controllers();
-window.addEventListener('DOMContentLoaded', (event) => {
-  initialData();
-});
+
 const initialData = async () => {
   state.originalData = await getData();
   state.currentList = [...state.originalData];
@@ -29,9 +34,8 @@ const initializePlayList = () => {
     li.appendChild(img);
     ul.appendChild(li);
   }
-  highlightCurrentPlaying();
+  ul.firstChild.classList.add('selected');
 };
-
 video1.addEventListener('ended', onEnded, false);
 
 function onEnded() {
@@ -40,17 +44,42 @@ function onEnded() {
     state.currentList,
     video1
   );
-  highlightCurrentPlaying();
 }
-function highlightCurrentPlaying() {
-  let currentVideo = document.getElementsByClassName('selected');
-  currentVideo.length ? currentVideo[0].classList.remove('selected') : null;
-  document.getElementById(state.current).classList.add('selected');
+function crazyMode() {
+  state.crazyMode = !state.crazyMode;
+  if (state.crazyMode) {
+    (function loop() {
+      const rand = Math.round(Math.random() * 10000);
+      setIntervalId = setTimeout(function () {
+        state.current = controllers.nextVideo(
+          state.current,
+          state.currentList,
+          video1
+        );
+        crazyMode();
+        loop();
+      }, rand);
+    })();
+  } else {
+    window.clearInterval(setIntervalId);
+  }
 }
+window.addEventListener('DOMContentLoaded', (event) => {
+  initialData();
+});
 document.getElementById('play_pause').addEventListener('click', (e) => {
   e.preventDefault();
   controllers.play_pause(state.isPlaying, video1);
   state.isPlaying = !state.isPlaying;
+});
+document.getElementById('crazy_mode').addEventListener('click', (e) => {
+  e.preventDefault();
+  if (state.crazyMode) {
+    document.getElementById('crazy_mode').innerText = 'CrazyMode';
+  } else {
+    document.getElementById('crazy_mode').innerText = 'NormalMode';
+  }
+  crazyMode();
 });
 document.getElementById('next_video').addEventListener('click', (e) => {
   e.preventDefault();
@@ -59,7 +88,6 @@ document.getElementById('next_video').addEventListener('click', (e) => {
     state.currentList,
     video1
   );
-  highlightCurrentPlaying();
 });
 document.getElementById('prev_video').addEventListener('click', (e) => {
   e.preventDefault();
@@ -68,7 +96,6 @@ document.getElementById('prev_video').addEventListener('click', (e) => {
     state.currentList,
     video1
   );
-  highlightCurrentPlaying();
 });
 document.getElementById('shuffle').addEventListener('click', (e) => {
   e.preventDefault();
@@ -81,5 +108,4 @@ document.getElementById('shuffle').addEventListener('click', (e) => {
   state.isShuffle = !state.isShuffle;
 
   initializePlayList();
-  highlightCurrentPlaying();
 });

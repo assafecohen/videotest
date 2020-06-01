@@ -1,3 +1,5 @@
+import { highlightCurrentPlaying } from './helper';
+
 export default class Controllers {
   play_pause(isPlaying, video) {
     if (isPlaying) {
@@ -13,6 +15,7 @@ export default class Controllers {
     if (current === allVideos.length) current = 0;
     video.setAttribute('src', allVideos[current].file);
     video.play();
+    highlightCurrentPlaying(current);
     return current;
   }
   prevVideo(current, allVideos, video) {
@@ -20,6 +23,7 @@ export default class Controllers {
     if (current < 0) current = allVideos.length - 1;
     video.setAttribute('src', allVideos[current].file);
     video.play();
+    highlightCurrentPlaying(current);
     return current;
   }
   shuffle(video, originalList, isShuffle) {
@@ -28,12 +32,15 @@ export default class Controllers {
     if (!isShuffle) {
       newList = newList.sort(function () {
         document.getElementById('shuffle').innerText = 'Original';
+        highlightCurrentPlaying(0);
         return 0.5 - Math.random();
       });
-    
     }
+
     video.setAttribute('src', newList[0].file);
+    highlightCurrentPlaying(0);
     video.play();
+
     return newList;
   }
 }
