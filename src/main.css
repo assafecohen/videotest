@@ -1,0 +1,63 @@
+body {
+  margin-top: 20px;
+  background-color: #d5d9de;
+}
+p {
+  color: #656565;
+}
+
+.container {
+  background-color: white;
+  box-shadow: 0 0 5px #9d9d9d;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+video {
+  width: 640px;
+  height: 360px;
+}
+
+#playlist {
+  color: #000;
+  margin: 0;
+  padding: 0;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-bottom: 1px solid #a7a7a7;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  width: 640px;
+}
+#playlist li {
+  list-style: none;
+  padding: 10px 15px;
+  border-bottom: 1px solid #a7a7a7;
+  cursor: pointer;
+}
+.selected {
+  background: rgb(166, 236, 160);
+}
+#playlist li img {
+  height: 35px;
+  width: 35px;
+}
+.current_playing {
+  background: #c3c796;
+}
+.menuItems li:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+#controllers {
+  display: flex;
+  flex-direction: row;
+}
+.menu h5 {
+  color: #fff;
+  padding: 25px 10px;
+}
+#controllers button {
+  padding: 10px;
+  margin: 10px
+}
