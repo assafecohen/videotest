@@ -46,24 +46,23 @@ function onEnded() {
   );
 }
 function crazyMode() {
-  state.crazyMode = !state.crazyMode;
+  console.log(state.crazyMode, 'crazy mode state');
   if (state.crazyMode) {
-    (function loop() {
-      const rand = Math.round(Math.random() * 10000);
-      setIntervalId = setTimeout(function () {
-        state.current = controllers.nextVideo(
-          state.current,
-          state.currentList,
-          video1
-        );
-        crazyMode();
-        loop();
-      }, rand);
-    })();
+    startSetTimeout();
+    function startSetTimeout() {
+      let rand = Math.floor(Math.random() * (10 - 5 + 1) + 5);
+      state.current = controllers.nextVideo(
+        state.current,
+        state.currentList,
+        video1
+      );
+      setIntervalId = setTimeout(startSetTimeout, rand * 1000);
+    }
   } else {
     window.clearInterval(setIntervalId);
   }
 }
+
 window.addEventListener('DOMContentLoaded', (event) => {
   initialData();
 });
@@ -74,10 +73,12 @@ document.getElementById('play_pause').addEventListener('click', (e) => {
 });
 document.getElementById('crazy_mode').addEventListener('click', (e) => {
   e.preventDefault();
+  state.crazyMode = !state.crazyMode;
   if (state.crazyMode) {
-    document.getElementById('crazy_mode').innerText = 'CrazyMode';
-  } else {
+    console.log('12');
     document.getElementById('crazy_mode').innerText = 'NormalMode';
+  } else {
+    document.getElementById('crazy_mode').innerText = 'CrazyMode';
   }
   crazyMode();
 });
